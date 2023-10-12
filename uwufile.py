@@ -2,7 +2,7 @@
 # ThatStella7922 - https://thatstel.la
 
 name = "uwufile.py"
-ver = "1.0"
+ver = "1.0.1"
 
 # Colors
 class colors:
@@ -279,13 +279,19 @@ try:
     if type(file_path) is PosixPath:
         if file_path.is_char_device():
             raise PermissionError("", f"Reading from {file_path} is disallowed for safety reasons.\n\t(no you cannot read from /dev/urandom fuck off)")
+    if file_path.is_dir() == True:
+        raise IsADirectoryError("", f"uwufile does not support directories")
     if file_path.is_file() == False:
-        raise FileNotFoundError("", f"No such file or directory")
+        raise FileNotFoundError("", f"File is invalid")
     #if file_path == out_path:
         #raise FileExistsError("", "Input and output files cannot be the same.")
     with open(file_path, 'r', encoding="utf-8") as file:
         file_contents = file.read()
     print(f"{colors.ok} Opened input file \"{file_path}\"")
+except IsADirectoryError as e:
+    print(f"{colors.fail} Error while reading the input directory \"{file_path}\":\n{colors.warn}\t{e.args[1]}")
+    print()
+    sys.exit(1)
 except UnicodeDecodeError as e:
     print(f"{colors.fail} UnicodeDecodeError while reading the input file \"{file_path}\":\n{colors.warn}\t{e.args[4]}\n{colors.question} Have you ensured that the input file contains text?")
     print()
